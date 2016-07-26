@@ -9,7 +9,7 @@ public class DeviceDriverTest {
 
     @Test
     public void read_From_Hardware() {
-        FlashMemoryDevice hardware = new MockFlashMemoryDevice();
+        FlashMemoryDevice hardware = new StubbedFlashMemoryDevice();
         DeviceDriver driver = new DeviceDriver(hardware);
         byte data = driver.read(0xFF);
         assertEquals(0, data);
@@ -17,13 +17,3 @@ public class DeviceDriverTest {
 
 }
 
-class MockFlashMemoryDevice implements FlashMemoryDevice {
-
-    public byte read(long address) {
-        return 0;
-    }
-
-    public void write(long address, byte data) {
-
-    }
-}
