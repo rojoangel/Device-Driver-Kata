@@ -9,10 +9,13 @@ public class DeviceDriverTest {
 
     @Test
     public void read_From_Hardware() {
-        FlashMemoryDevice hardware = new StubbedFlashMemoryDevice();
+        byte memoryValue = 0;
+        FlashMemoryDevice hardware = new StubbedFlashMemoryDevice(memoryValue);
+
         DeviceDriver driver = new DeviceDriver(hardware);
         byte data = driver.read(0xFF);
-        assertEquals(0, data);
+
+        assertEquals(memoryValue, data);
     }
 
 }
