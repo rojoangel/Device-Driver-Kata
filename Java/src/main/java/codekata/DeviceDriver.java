@@ -5,13 +5,14 @@ package codekata;
  */
 public class DeviceDriver {
 
+    private FlashMemoryDevice hardware;
+
     public DeviceDriver(FlashMemoryDevice hardware) {
-        // TODO: implement this method
+        this.hardware = hardware;
     }
 
     public byte read(long address) {
-        // TODO: implement this method
-        return -1;
+        return this.hardware.read(address);
     }
 
     public void write(long address, byte data) {
