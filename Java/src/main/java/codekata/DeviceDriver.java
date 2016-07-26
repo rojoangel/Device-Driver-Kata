@@ -7,12 +7,16 @@ public class DeviceDriver {
 
     private FlashMemoryDevice hardware;
 
+    private FlashMemoryDevice getHardware() {
+        return hardware;
+    }
+
     public DeviceDriver(FlashMemoryDevice hardware) {
         this.hardware = hardware;
     }
 
     public byte read(long address) {
-        return this.hardware.read(address);
+        return getHardware().read(address);
     }
 
     public void write(long address, byte data) {
