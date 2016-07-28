@@ -32,12 +32,15 @@ public class DeviceDriverTest {
     @Test
     public void succcessful_write_To_Hardware() throws Exception {
 
-        byte memoryValue = 100;
+        final int address = 0xFF;
+        final byte value = 100;
+
         final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
         context.checking(new Expectations() {{
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
 //        Then make a call to write the data to the address you want to write to.
+            oneOf(hardware).write(address, value);
 //        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
 //          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
 //          In a typical device it should take around ten microseconds, but it will vary from write to write.
@@ -48,7 +51,7 @@ public class DeviceDriverTest {
 //        If that is successful, then you can assume the whole write operation was successful.
         }});
         DeviceDriver driver = new DeviceDriver(hardware);
-        driver.write(0xFF, memoryValue);
+        driver.write(address, value);
 
         context.assertIsSatisfied();
     }
