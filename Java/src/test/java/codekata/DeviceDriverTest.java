@@ -1,12 +1,11 @@
 package codekata;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 
 public class DeviceDriverTest {
