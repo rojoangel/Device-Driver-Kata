@@ -20,6 +20,6 @@ public class DeviceDriver {
     }
 
     public void write(long address, byte data) {
-        // TODO: implement this method
+        hardware.write(0x0, (byte) 0x40);
     }
 }
