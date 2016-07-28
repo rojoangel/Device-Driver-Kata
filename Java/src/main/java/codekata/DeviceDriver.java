@@ -24,6 +24,10 @@ public class DeviceDriver {
     public void write(long address, byte data) {
         writeProgramCommand();
         hardware.write(address, data);
+        byte readByte;
+        do {
+            readByte = hardware.read(0x0);
+        } while ((readByte & 0b0001000000) != 0b0001000000);
     }
 
     private void writeProgramCommand() {
