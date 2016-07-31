@@ -56,11 +56,11 @@ public class DeviceDriver {
     }
 
     private byte readFromHardware(long address) {
-        return hardware.read(address);
+        return getHardware().read(address);
     }
 
     private void writeToHardware(long address, byte data) {
-        hardware.write(address, data);
+        getHardware().write(address, data);
     }
 
     private byte waitForWriteOperationToComplete() {
