@@ -43,8 +43,12 @@ public class DeviceDriverTest {
 //        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
 //          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
 //          In a typical device it should take around ten microseconds, but it will vary from write to write.
-            oneOf(hardware).read(0x0);
-            will(returnValue((byte) 0b0001000000));
+            exactly(4).of(hardware).read(0x0);
+            will(onConsecutiveCalls(
+                    returnValue((byte) 0b0000000000),
+                    returnValue((byte) 0b0000000000),
+                    returnValue((byte) 0b0000000000),
+                    returnValue((byte) 0b0001000000)));
 //        There could have been an error, so in the value from address 0x0, examine the contents of the other bits.
 //          If all of them are set to 0 then the operation was successful.
 //        You should then make a read from the memory address you previously set,
