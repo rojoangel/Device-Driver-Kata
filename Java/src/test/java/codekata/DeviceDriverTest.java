@@ -23,13 +23,20 @@ public class DeviceDriverTest {
 
     @Test
     public void read_From_Hardware() {
-        byte memoryValue = 0;
-        FlashMemoryDevice hardware = new StubbedFlashMemoryDevice(memoryValue);
+        int address = 0xAB;
+        byte memoryValue = 0b00010001;
+
+        final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
+        context.checking(new Expectations() {{
+            oneOf(hardware).read(address);
+            will(returnValue(memoryValue));
+        }});
 
         DeviceDriver driver = new DeviceDriver(hardware);
-        byte data = driver.read(0xFF);
+        byte readValue = driver.read(address);
+        context.assertIsSatisfied();
 
-        assertEquals(memoryValue, data);
+        assertEquals(memoryValue, readValue);
     }
 
     @Test
