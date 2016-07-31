@@ -1,5 +1,7 @@
 package codekata;
 
+import codekata.exception.WriteVerificationError;
+
 /**
  * This class is used by the operating system to interact with the hardware 'FlashMemoryDevice'.
  */
@@ -21,13 +23,18 @@ public class DeviceDriver {
         return getHardware().read(address);
     }
 
-    public void write(long address, byte data) {
+    public void write(long address, byte data) throws Exception {
         writeProgramCommand();
         hardware.write(address, data);
         byte readByte;
         do {
             readByte = hardware.read(0x0);
         } while ((readByte & 0b0001000000) != 0b0001000000);
+        if (readByte == 0b0001000000) {
+            if (hardware.read(address) != data) {
+                throw new WriteVerificationError();
+            }
+        }
     }
 
     private void writeProgramCommand() {

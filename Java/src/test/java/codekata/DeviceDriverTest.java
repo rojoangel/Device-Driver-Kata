@@ -49,12 +49,14 @@ public class DeviceDriverTest {
                     returnValue((byte) 0b0000000000),
                     returnValue((byte) 0b0000000000),
                     returnValue((byte) 0b0001000000)));
-//        There could have been an error, so in the value from address 0x0, examine the contents of the other bits.
 //          If all of them are set to 0 then the operation was successful.
 //        You should then make a read from the memory address you previously set,
 //          in order to check it returns the value you set.
 //        If that is successful, then you can assume the whole write operation was successful.
+            oneOf(hardware).read(address);
+            will(returnValue(value));
         }});
+
         DeviceDriver driver = new DeviceDriver(hardware);
         driver.write(address, value);
 
