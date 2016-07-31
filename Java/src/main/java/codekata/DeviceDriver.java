@@ -1,6 +1,7 @@
 package codekata;
 
 import codekata.exception.InternalHardwareError;
+import codekata.exception.ProtectedBlockError;
 import codekata.exception.VoltageError;
 import codekata.exception.WriteVerificationError;
 
@@ -41,6 +42,9 @@ public class DeviceDriver {
                 case 0b0001001000:
                     writeToHardware(0x0, (byte) 0xFF);
                     throw new InternalHardwareError();
+                case 0b0001010000:
+                    writeToHardware(0x0, (byte) 0xFF);
+                    throw new ProtectedBlockError();
             }
         }
     }
