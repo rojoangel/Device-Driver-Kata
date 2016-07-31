@@ -25,19 +25,39 @@ public class DeviceDriver {
 
     public void write(long address, byte data) throws Exception {
         writeProgramCommand();
-        hardware.write(address, data);
-        byte readByte;
-        do {
-            readByte = hardware.read(0x0);
-        } while ((readByte & 0b0001000000) != 0b0001000000);
-        if (readByte == 0b0001000000) {
-            if (hardware.read(address) != data) {
+        writeToHardware(address, data);
+        if (wasWriteOperationSuccessful(waitForWriteOperationToComplete())) {
+            if (!verifyWriteOperation(address, data)) {
                 throw new WriteVerificationError();
             }
         }
     }
 
+    private boolean verifyWriteOperation(long address, byte data) {
+        return readFromHardware(address) == data;
+    }
+
+    private boolean wasWriteOperationSuccessful(byte readByte) {
+        return readByte == 0b0001000000;
+    }
+
+    private byte readFromHardware(long address) {
+        return hardware.read(address);
+    }
+
+    private void writeToHardware(long address, byte data) {
+        hardware.write(address, data);
+    }
+
+    private byte waitForWriteOperationToComplete() {
+        byte readByte;
+        do {
+            readByte = readFromHardware(0x0);
+        } while ((readByte & 0b0001000000) != 0b0001000000);
+        return readByte;
+    }
+
     private void writeProgramCommand() {
-        hardware.write(0x0, PROGRAM_COMMAND);
+        writeToHardware(0x0, PROGRAM_COMMAND);
     }
 }
