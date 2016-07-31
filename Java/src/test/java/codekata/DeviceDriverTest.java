@@ -1,5 +1,6 @@
 package codekata;
 
+import codekata.exception.InternalHardwareError;
 import codekata.exception.VoltageError;
 import codekata.exception.WriteVerificationError;
 import org.jmock.Expectations;
@@ -137,5 +138,40 @@ public class DeviceDriverTest {
         context.assertIsSatisfied();
     }
 
+    @Test(expected = InternalHardwareError.class)
+    public void internal_Error_On_Write_To_Hardware() throws Exception {
+
+        final int address = 0xFF;
+        final byte value = 100;
+
+        final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
+        context.checking(new Expectations() {{
+//          Begin by writing the 'Program' command, 0x40 to address 0x0
+            oneOf(hardware).write(0x0, (byte) 0x40);
+//        Then make a call to write the data to the address you want to write to.
+            oneOf(hardware).write(address, value);
+//        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
+//          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
+//          In a typical device it should take around ten microseconds, but it will vary from write to write.
+            exactly(4).of(hardware).read(0x0);
+            will(onConsecutiveCalls(
+                    returnValue((byte) 0b0000000000),
+                    returnValue((byte) 0b0000000000),
+                    returnValue((byte) 0b0000000000),
+//        In the case of an error, the device sets the one of the other bits in the data at location 0x0
+//          bit 4: internal error. Something went wrong this time but next time it might work.
+                    returnValue((byte) 0b0001001000)));
+//        If any of these error bits are set, you must write 0xFF to address 0x0
+//          before the device will accept any new write requests.
+//          This will reset the error bits to zero. Note that until the 'ready bit' is set,
+//          then you will not get valid values for any of the error bits.
+            oneOf(hardware).write(0x0, (byte) 0xFF);
+        }});
+
+        DeviceDriver driver = new DeviceDriver(hardware);
+        driver.write(address, value);
+
+        context.assertIsSatisfied();
+    }
 }
 

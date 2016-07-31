@@ -1,5 +1,6 @@
 package codekata;
 
+import codekata.exception.InternalHardwareError;
 import codekata.exception.VoltageError;
 import codekata.exception.WriteVerificationError;
 
@@ -27,13 +28,20 @@ public class DeviceDriver {
     public void write(long address, byte data) throws Exception {
         writeProgramCommand();
         writeToHardware(address, data);
-        if (wasWriteOperationSuccessful(waitForWriteOperationToComplete())) {
+        byte readByte = waitForWriteOperationToComplete();
+        if (wasWriteOperationSuccessful(readByte)) {
             if (!verifyWriteOperation(address, data)) {
                 throw new WriteVerificationError();
             }
         } else {
-            writeToHardware(0x0, (byte) 0xFF);
-            throw new VoltageError();
+            switch (readByte) {
+                case 0b0001000100:
+                    writeToHardware(0x0, (byte) 0xFF);
+                    throw new VoltageError();
+                case 0b0001001000:
+                    writeToHardware(0x0, (byte) 0xFF);
+                    throw new InternalHardwareError();
+            }
         }
     }
 
