@@ -35,7 +35,7 @@ public class DeviceDriver {
                 throw new WriteVerificationError();
             }
         } else {
-            writeToHardware(0x0, (byte) 0xFF);
+            setHardwareReadyToAcceptNewWrites();
             switch (readByte) {
                 case 0b0001000100:
                     throw new VoltageError();
@@ -45,6 +45,10 @@ public class DeviceDriver {
                     throw new ProtectedBlockError();
             }
         }
+    }
+
+    private void setHardwareReadyToAcceptNewWrites() {
+        writeToHardware(0x0, (byte) 0xFF);
     }
 
     private boolean verifyWriteOperation(long address, byte data) {
