@@ -35,15 +35,13 @@ public class DeviceDriver {
                 throw new WriteVerificationError();
             }
         } else {
+            writeToHardware(0x0, (byte) 0xFF);
             switch (readByte) {
                 case 0b0001000100:
-                    writeToHardware(0x0, (byte) 0xFF);
                     throw new VoltageError();
                 case 0b0001001000:
-                    writeToHardware(0x0, (byte) 0xFF);
                     throw new InternalHardwareError();
                 case 0b0001010000:
-                    writeToHardware(0x0, (byte) 0xFF);
                     throw new ProtectedBlockError();
             }
         }
