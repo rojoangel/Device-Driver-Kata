@@ -1,9 +1,6 @@
 package codekata;
 
-import codekata.exception.InternalHardwareError;
-import codekata.exception.ProtectedBlockError;
-import codekata.exception.VoltageError;
-import codekata.exception.WriteVerificationError;
+import codekata.exception.*;
 
 /**
  * This class is used by the operating system to interact with the hardware 'FlashMemoryDevice'.
@@ -13,13 +10,15 @@ public class DeviceDriver {
     public static final byte PROGRAM_COMMAND = (byte) 0x40;
 
     private FlashMemoryDevice hardware;
+    private Timer timer;
 
     private FlashMemoryDevice getHardware() {
         return hardware;
     }
 
-    public DeviceDriver(FlashMemoryDevice hardware) {
+    public DeviceDriver(FlashMemoryDevice hardware, Timer timer) {
         this.hardware = hardware;
+        this.timer = timer;
     }
 
     public byte read(long address) {
@@ -67,12 +66,22 @@ public class DeviceDriver {
         getHardware().write(address, data);
     }
 
-    private byte waitForWriteOperationToComplete() {
+    private byte waitForWriteOperationToComplete() throws ReadyBitTimeoutError{
         byte readByte;
         do {
             readByte = readFromHardware(0x0);
-        } while (!isReadyBitSet(readByte));
+            if (isReadyBitSet(readByte)) {
+                break;
+            }
+            if (timeout()) {
+                throw new ReadyBitTimeoutError();
+            }
+        } while (true);
         return readByte;
+    }
+
+    private boolean timeout() {
+        return timer.hasTimedOut();
     }
 
     private boolean isReadyBitSet(byte readByte) {

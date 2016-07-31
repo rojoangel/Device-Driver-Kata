@@ -1,9 +1,6 @@
 package codekata;
 
-import codekata.exception.InternalHardwareError;
-import codekata.exception.ProtectedBlockError;
-import codekata.exception.VoltageError;
-import codekata.exception.WriteVerificationError;
+import codekata.exception.*;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
@@ -27,12 +24,15 @@ public class DeviceDriverTest {
         byte memoryValue = 0b00010001;
 
         final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
+        final Timer timer = context.mock(Timer.class);
+
         context.checking(new Expectations() {{
+            ignoring(timer);
             oneOf(hardware).read(address);
             will(returnValue(memoryValue));
         }});
 
-        DeviceDriver driver = new DeviceDriver(hardware);
+        DeviceDriver driver = new DeviceDriver(hardware, timer);
         byte readValue = driver.read(address);
         context.assertIsSatisfied();
 
@@ -46,7 +46,10 @@ public class DeviceDriverTest {
         final byte value = 100;
 
         final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
+        final Timer timer = context.mock(Timer.class);
+
         context.checking(new Expectations() {{
+            ignoring(timer);
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
 //        Then make a call to write the data to the address you want to write to.
@@ -68,7 +71,7 @@ public class DeviceDriverTest {
             will(returnValue(value));
         }});
 
-        DeviceDriver driver = new DeviceDriver(hardware);
+        DeviceDriver driver = new DeviceDriver(hardware, timer);
         driver.write(address, value);
 
         context.assertIsSatisfied();
@@ -82,7 +85,10 @@ public class DeviceDriverTest {
         final byte readVerificationFailureValue = 0b0000000001;
 
         final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
+        final Timer timer = context.mock(Timer.class);
+
         context.checking(new Expectations() {{
+            ignoring(timer);
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
 //        Then make a call to write the data to the address you want to write to.
@@ -104,7 +110,7 @@ public class DeviceDriverTest {
             will(returnValue(readVerificationFailureValue));
         }});
 
-        DeviceDriver driver = new DeviceDriver(hardware);
+        DeviceDriver driver = new DeviceDriver(hardware, timer);
         driver.write(address, value);
 
         context.assertIsSatisfied();
@@ -117,7 +123,10 @@ public class DeviceDriverTest {
         final byte value = 100;
 
         final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
+        final Timer timer = context.mock(Timer.class);
+
         context.checking(new Expectations() {{
+            ignoring(timer);
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
 //        Then make a call to write the data to the address you want to write to.
@@ -140,7 +149,7 @@ public class DeviceDriverTest {
             oneOf(hardware).write(0x0, (byte) 0xFF);
         }});
 
-        DeviceDriver driver = new DeviceDriver(hardware);
+        DeviceDriver driver = new DeviceDriver(hardware, timer);
         driver.write(address, value);
 
         context.assertIsSatisfied();
@@ -153,7 +162,10 @@ public class DeviceDriverTest {
         final byte value = 100;
 
         final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
+        final Timer timer = context.mock(Timer.class);
+
         context.checking(new Expectations() {{
+            ignoring(timer);
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
 //        Then make a call to write the data to the address you want to write to.
@@ -176,7 +188,7 @@ public class DeviceDriverTest {
             oneOf(hardware).write(0x0, (byte) 0xFF);
         }});
 
-        DeviceDriver driver = new DeviceDriver(hardware);
+        DeviceDriver driver = new DeviceDriver(hardware, timer);
         driver.write(address, value);
 
         context.assertIsSatisfied();
@@ -189,7 +201,9 @@ public class DeviceDriverTest {
         final byte value = 100;
 
         final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
+        final Timer timer = context.mock(Timer.class);
         context.checking(new Expectations() {{
+            ignoring(timer);
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
 //        Then make a call to write the data to the address you want to write to.
@@ -212,7 +226,36 @@ public class DeviceDriverTest {
             oneOf(hardware).write(0x0, (byte) 0xFF);
         }});
 
-        DeviceDriver driver = new DeviceDriver(hardware);
+        DeviceDriver driver = new DeviceDriver(hardware, timer);
+        driver.write(address, value);
+
+        context.assertIsSatisfied();
+    }
+    @Test(expected = ReadyBitTimeoutError.class)
+    public void ready_Bit_TimeOut_Error_On_Write_To_Hardware() throws Exception {
+
+        final int address = 0xFF;
+        final byte value = 100;
+
+        final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
+        final Timer timer = context.mock(Timer.class);
+        context.checking(new Expectations() {{
+//          Begin by writing the 'Program' command, 0x40 to address 0x0
+            oneOf(hardware).write(0x0, (byte) 0x40);
+//        Then make a call to write the data to the address you want to write to.
+            oneOf(hardware).write(address, value);
+//        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
+//          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
+//          In a typical device it should take around ten microseconds, but it will vary from write to write.
+            oneOf(hardware).read(0x0);
+            will(returnValue((byte) 0b0000000000));
+
+            oneOf(timer).hasTimedOut();
+            will(returnValue(true));
+
+        }});
+
+        DeviceDriver driver = new DeviceDriver(hardware, timer);
         driver.write(address, value);
 
         context.assertIsSatisfied();
