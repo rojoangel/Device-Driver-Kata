@@ -1,5 +1,6 @@
 package codekata;
 
+import codekata.exception.WriteVerificationError;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
@@ -55,6 +56,42 @@ public class DeviceDriverTest {
 //        If that is successful, then you can assume the whole write operation was successful.
             oneOf(hardware).read(address);
             will(returnValue(value));
+        }});
+
+        DeviceDriver driver = new DeviceDriver(hardware);
+        driver.write(address, value);
+
+        context.assertIsSatisfied();
+    }
+
+    @Test(expected = WriteVerificationError.class)
+    public void write_Verification_Error_On_Write_To_Hardware() throws Exception {
+
+        final int address = 0xFF;
+        final byte value = 100;
+        final byte readVerificationFailureValue = 0b0000000001;
+
+        final FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
+        context.checking(new Expectations() {{
+//          Begin by writing the 'Program' command, 0x40 to address 0x0
+            oneOf(hardware).write(0x0, (byte) 0x40);
+//        Then make a call to write the data to the address you want to write to.
+            oneOf(hardware).write(address, value);
+//        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
+//          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
+//          In a typical device it should take around ten microseconds, but it will vary from write to write.
+            exactly(4).of(hardware).read(0x0);
+            will(onConsecutiveCalls(
+                    returnValue((byte) 0b0000000000),
+                    returnValue((byte) 0b0000000000),
+                    returnValue((byte) 0b0000000000),
+                    returnValue((byte) 0b0001000000)));
+//          If all of them are set to 0 then the operation was successful.
+//        You should then make a read from the memory address you previously set,
+//          in order to check it returns the value you set.
+//        If that is successful, then you can assume the whole write operation was successful.
+            oneOf(hardware).read(address);
+            will(returnValue(readVerificationFailureValue));
         }});
 
         DeviceDriver driver = new DeviceDriver(hardware);
