@@ -1,5 +1,6 @@
 package codekata;
 
+import codekata.exception.VoltageError;
 import codekata.exception.WriteVerificationError;
 
 /**
@@ -30,6 +31,9 @@ public class DeviceDriver {
             if (!verifyWriteOperation(address, data)) {
                 throw new WriteVerificationError();
             }
+        } else {
+            writeToHardware(0x0, (byte) 0xFF);
+            throw new VoltageError();
         }
     }
 
