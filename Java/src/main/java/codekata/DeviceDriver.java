@@ -71,8 +71,12 @@ public class DeviceDriver {
         byte readByte;
         do {
             readByte = readFromHardware(0x0);
-        } while ((readByte & 0b0001000000) != 0b0001000000);
+        } while (!isReadyBitSet(readByte));
         return readByte;
+    }
+
+    private boolean isReadyBitSet(byte readByte) {
+        return (readByte & 0b0001000000) == 0b0001000000;
     }
 
     private void writeProgramCommand() {
