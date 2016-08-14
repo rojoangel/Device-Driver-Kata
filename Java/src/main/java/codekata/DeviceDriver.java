@@ -43,7 +43,7 @@ public class DeviceDriver {
     private void writeToHardware(long address, byte data) {
         getHardware().write(address, data);
     }
-    
+
     private void writeProgramCommand() {
         writeToHardware(0x0, PROGRAM_COMMAND);
     }
@@ -53,7 +53,7 @@ public class DeviceDriver {
         public void verify(long address, byte data) throws WriteError {
             byte readByte = waitForWriteOperationToComplete();
             if (wasWriteOperationSuccessful(readByte)) {
-                if (!verifyWriteOperation(address, data)) {
+                if (!verifyWrittenData(address, data)) {
                     throw new WriteVerificationError();
                 }
             } else {
@@ -91,7 +91,7 @@ public class DeviceDriver {
             return (readByte & 0b0001000000) == 0b0001000000;
         }
 
-        private boolean verifyWriteOperation(long address, byte data) {
+        private boolean verifyWrittenData(long address, byte data) {
             return readFromHardware(address) == data;
         }
 
