@@ -11,15 +11,13 @@ public class DeviceDriver {
 
     private FlashMemoryDevice hardware;
     private HardwareReader hardwareReader;
+    private HardwareWriter hardwareWriter;
     private WriteOperationVerifier writeVerifier;
-
-    private FlashMemoryDevice getHardware() {
-        return hardware;
-    }
 
     public DeviceDriver(FlashMemoryDevice hardware, Timer timer) {
         this.hardware = hardware;
         this.hardwareReader = new HardwareReader(hardware);
+        this.hardwareWriter = new HardwareWriter(hardware);
         this.writeVerifier = new WriteOperationVerifier(hardware, timer);
     }
 
@@ -38,11 +36,11 @@ public class DeviceDriver {
     }
 
     private void writeToHardware(long address, byte data) {
-        getHardware().write(address, data);
+        hardwareWriter.write(address, data);
     }
 
     private void writeProgramCommand() {
-        writeToHardware(0x0, PROGRAM_COMMAND);
+        hardwareWriter.write(0x0, PROGRAM_COMMAND);
     }
 
 }
