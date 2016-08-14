@@ -9,9 +9,9 @@ class WriteOperationVerifier {
     private HardwareWriter hardwareWriter;
     private Timer timer;
 
-    WriteOperationVerifier(FlashMemoryDevice hardware, Timer timer) {
-        this.hardwareReader = new HardwareReader(hardware);
-        this.hardwareWriter = new HardwareWriter(hardware);
+    WriteOperationVerifier(HardwareReader hardwareReader, HardwareWriter hardwareWriter, Timer timer) {
+        this.hardwareReader = hardwareReader;
+        this.hardwareWriter = hardwareWriter;
         this.timer = timer;
     }
 
