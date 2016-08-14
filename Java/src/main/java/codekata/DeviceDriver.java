@@ -28,6 +28,10 @@ public class DeviceDriver {
     public void write(long address, byte data) throws Exception {
         writeProgramCommand();
         writeToHardware(address, data);
+        verifyWrite(address, data);
+    }
+
+    private void verifyWrite(long address, byte data) throws ReadyBitTimeoutError, WriteVerificationError, VoltageError, InternalHardwareError, ProtectedBlockError {
         byte readByte = waitForWriteOperationToComplete();
         if (wasWriteOperationSuccessful(readByte)) {
             if (!verifyWriteOperation(address, data)) {
