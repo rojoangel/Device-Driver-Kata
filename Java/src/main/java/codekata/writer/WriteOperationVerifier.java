@@ -18,6 +18,7 @@ public class WriteOperationVerifier {
         this.hardware = hardware;
         this.errorHandlers.put((byte) 0b0001000100, new VoltageErrorHandler(this.hardware));
         this.errorHandlers.put((byte) 0b0001001000, new InternalHardwareErrorHandler(this.hardware));
+        this.errorHandlers.put((byte) 0b0001010000, new ProtectedBlockErrorHandler(this.hardware));
         this.timer = timer;
     }
 
@@ -30,9 +31,6 @@ public class WriteOperationVerifier {
                     throw new WriteVerificationError();
                 }
                 break;
-            case 0b0001010000:
-                setHardwareReadyToAcceptNewWrites();
-                throw new ProtectedBlockError();
         }
     }
 
