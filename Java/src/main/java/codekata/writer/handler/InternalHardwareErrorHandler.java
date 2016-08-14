@@ -14,6 +14,12 @@ public class InternalHardwareErrorHandler implements WriteErrorHandler {
         this.hardwareResetter = new HardwareResetter(hardware);
     }
 
+    @Override
+    public byte handles() {
+        return 0b0001001000;
+    }
+
+    @Override
     public void handle() throws WriteError {
         hardwareResetter.reset();
         throw new InternalHardwareError();

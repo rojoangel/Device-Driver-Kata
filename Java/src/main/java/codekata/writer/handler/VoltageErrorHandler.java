@@ -15,6 +15,11 @@ public class VoltageErrorHandler implements WriteErrorHandler {
     }
 
     @Override
+    public byte handles() {
+        return 0b0001000100;
+    }
+
+    @Override
     public void handle() throws WriteError {
         hardwareResetter.reset();
         throw new VoltageError();
