@@ -3,21 +3,19 @@ package codekata.writer.handler;
 import codekata.FlashMemoryDevice;
 import codekata.exception.WriteError;
 import codekata.exception.write.InternalHardwareError;
+import codekata.writer.HardwareResetter;
 import codekata.writer.WriteErrorHandler;
 
 public class InternalHardwareErrorHandler implements WriteErrorHandler {
 
-    private FlashMemoryDevice hardware;
+    private final HardwareResetter hardwareResetter;
 
     public InternalHardwareErrorHandler(FlashMemoryDevice hardware) {
-        this.hardware = hardware;
+        this.hardwareResetter = new HardwareResetter(hardware);
     }
 
     public void handle() throws WriteError {
-        setHardwareReadyToAcceptNewWrites();
+        hardwareResetter.reset();
         throw new InternalHardwareError();
-    }
-    private void setHardwareReadyToAcceptNewWrites() {
-        hardware.write((long) 0x0, (byte) 0xFF);
     }
 }
