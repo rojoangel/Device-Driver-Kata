@@ -35,17 +35,15 @@ public class WriteOperationVerifier {
     }
 
     private byte waitForWriteOperationToComplete() throws ReadyBitTimeoutError {
-        byte readByte;
         do {
-            readByte = read(0x0);
+            byte readByte = read(0x0);
             if (isReadyBitSet(readByte)) {
-                break;
+                return readByte;
             }
             if (timeout()) {
                 throw new ReadyBitTimeoutError();
             }
         } while (true);
-        return readByte;
     }
 
     private boolean wasWriteOperationSuccessful(byte readByte) {
