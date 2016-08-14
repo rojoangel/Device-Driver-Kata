@@ -14,12 +14,12 @@ import java.util.Map;
 public class WriteOperationVerifier {
 
     private final Map<Byte, WriteErrorHandler> errorHandlers = new HashMap<>();
+    private final WriteOperationCompletionChecker writeOperationCompletenessChecker;
     private FlashMemoryDevice hardware;
-    private Timer timer;
 
     public WriteOperationVerifier(FlashMemoryDevice hardware, Timer timer) {
         this.hardware = hardware;
-        this.timer = timer;
+        writeOperationCompletenessChecker = new WriteOperationCompletionChecker(hardware, timer);
         registerErrorHandlers();
     }
 
@@ -59,27 +59,11 @@ public class WriteOperationVerifier {
     }
 
     private byte waitForWriteOperationToComplete() throws ReadyBitTimeoutError {
-        do {
-            byte readByte = read(0x0);
-            if (isReadyBitSet(readByte)) {
-                return readByte;
-            }
-            if (timeout()) {
-                throw new ReadyBitTimeoutError();
-            }
-        } while (true);
-    }
-
-    private boolean isReadyBitSet(byte readByte) {
-        return (readByte & 0b0001000000) == 0b0001000000;
+        return writeOperationCompletenessChecker.check();
     }
 
     private boolean verifyWrittenData(long address, byte data) {
         return read(address) == data;
-    }
-
-    private boolean timeout() {
-        return timer.hasTimedOut();
     }
 
     private byte read(long address) {
