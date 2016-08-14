@@ -44,9 +44,6 @@ public class DeviceDriver {
         getHardware().write(address, data);
     }
 
-    private boolean timeout() {
-        return timer.hasTimedOut();
-    }
 
     private boolean isReadyBitSet(byte readByte) {
         return (readByte & 0b0001000000) == 0b0001000000;
@@ -101,6 +98,10 @@ public class DeviceDriver {
 
         private void setHardwareReadyToAcceptNewWrites() {
             writeToHardware(0x0, (byte) 0xFF);
+        }
+
+        private boolean timeout() {
+            return timer.hasTimedOut();
         }
     }
 }
