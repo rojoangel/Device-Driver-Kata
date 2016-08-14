@@ -60,19 +60,11 @@ public class WriteOperationVerifier {
         return read(address) == data;
     }
 
-    private void setHardwareReadyToAcceptNewWrites() {
-        write(0x0, (byte) 0xFF);
-    }
-
     private boolean timeout() {
         return timer.hasTimedOut();
     }
 
     private byte read(long address) {
         return hardware.read(address);
-    }
-
-    private void write(long address, byte data) {
-        hardware.write(address, data);
     }
 }
