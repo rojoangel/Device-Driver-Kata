@@ -1,5 +1,6 @@
 package codekata;
 
+import codekata.exception.WriteError;
 import codekata.exception.write.*;
 
 /**
@@ -31,7 +32,7 @@ public class DeviceDriver {
         verifyWrite(address, data);
     }
 
-    private void verifyWrite(long address, byte data) throws ReadyBitTimeoutError, WriteVerificationError, VoltageError, InternalHardwareError, ProtectedBlockError {
+    private void verifyWrite(long address, byte data) throws WriteError {
         byte readByte = waitForWriteOperationToComplete();
         if (wasWriteOperationSuccessful(readByte)) {
             if (!verifyWriteOperation(address, data)) {
