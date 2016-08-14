@@ -19,7 +19,7 @@ public class DeviceDriver {
     public DeviceDriver(FlashMemoryDevice hardware, Timer timer) {
         this.hardwareReader = new HardwareReader(hardware);
         this.hardwareWriter = new HardwareWriter(hardware);
-        this.writeVerifier = new WriteOperationVerifier(hardwareReader, hardwareWriter, timer);
+        this.writeVerifier = new WriteOperationVerifier(hardware, timer);
     }
 
     public byte read(long address) {

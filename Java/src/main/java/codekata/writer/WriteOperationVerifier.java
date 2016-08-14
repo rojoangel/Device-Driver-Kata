@@ -1,19 +1,17 @@
 package codekata.writer;
 
+import codekata.FlashMemoryDevice;
 import codekata.Timer;
 import codekata.exception.WriteError;
 import codekata.exception.write.*;
-import codekata.reader.HardwareReader;
 
 public class WriteOperationVerifier {
 
-    private HardwareReader hardwareReader;
-    private HardwareWriter hardwareWriter;
+    private FlashMemoryDevice hardware;
     private Timer timer;
 
-    public WriteOperationVerifier(HardwareReader hardwareReader, HardwareWriter hardwareWriter, Timer timer) {
-        this.hardwareReader = hardwareReader;
-        this.hardwareWriter = hardwareWriter;
+    public WriteOperationVerifier(FlashMemoryDevice hardware, Timer timer) {
+        this.hardware = hardware;
         this.timer = timer;
     }
 
@@ -39,7 +37,7 @@ public class WriteOperationVerifier {
     private byte waitForWriteOperationToComplete() throws ReadyBitTimeoutError {
         byte readByte;
         do {
-            readByte = readFromHardware(0x0);
+            readByte = read(0x0);
             if (isReadyBitSet(readByte)) {
                 break;
             }
@@ -59,22 +57,22 @@ public class WriteOperationVerifier {
     }
 
     private boolean verifyWrittenData(long address, byte data) {
-        return readFromHardware(address) == data;
+        return read(address) == data;
     }
 
     private void setHardwareReadyToAcceptNewWrites() {
-        writeToHardware(0x0, (byte) 0xFF);
+        write(0x0, (byte) 0xFF);
     }
 
     private boolean timeout() {
         return timer.hasTimedOut();
     }
 
-    private byte readFromHardware(long address) {
-        return hardwareReader.read(address);
+    private byte read(long address) {
+        return hardware.read(address);
     }
 
-    private void writeToHardware(long address, byte data) {
-        hardwareWriter.writeToHardware(address, data);
+    private void write(long address, byte data) {
+        hardware.write(address, data);
     }
 }
