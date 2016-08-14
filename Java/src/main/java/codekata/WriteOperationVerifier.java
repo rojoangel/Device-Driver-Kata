@@ -6,10 +6,12 @@ import codekata.exception.write.*;
 class WriteOperationVerifier {
 
     private FlashMemoryDevice hardware;
+    private HardwareReader hardwareReader;
     private Timer timer;
 
     WriteOperationVerifier(FlashMemoryDevice hardware, Timer timer) {
         this.hardware = hardware;
+        this.hardwareReader = new HardwareReader(hardware);
         this.timer = timer;
     }
 
@@ -67,7 +69,7 @@ class WriteOperationVerifier {
     }
 
     private byte readFromHardware(long address) {
-        return getHardware().read(address);
+        return hardwareReader.read(address);
     }
     private void writeToHardware(long address, byte data) {
         getHardware().write(address, data);

@@ -10,6 +10,7 @@ public class DeviceDriver {
     public static final byte PROGRAM_COMMAND = (byte) 0x40;
 
     private FlashMemoryDevice hardware;
+    private HardwareReader hardwareReader;
     private WriteOperationVerifier writeVerifier;
 
     private FlashMemoryDevice getHardware() {
@@ -18,11 +19,12 @@ public class DeviceDriver {
 
     public DeviceDriver(FlashMemoryDevice hardware, Timer timer) {
         this.hardware = hardware;
+        this.hardwareReader = new HardwareReader(hardware);
         this.writeVerifier = new WriteOperationVerifier(hardware, timer);
     }
 
     public byte read(long address) {
-        return getHardware().read(address);
+        return hardwareReader.read(address);
     }
 
     public void write(long address, byte data) throws Exception {
