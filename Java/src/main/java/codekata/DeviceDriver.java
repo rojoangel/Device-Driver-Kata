@@ -9,13 +9,11 @@ public class DeviceDriver {
 
     public static final byte PROGRAM_COMMAND = (byte) 0x40;
 
-    private FlashMemoryDevice hardware;
     private HardwareReader hardwareReader;
     private HardwareWriter hardwareWriter;
     private WriteOperationVerifier writeVerifier;
 
     public DeviceDriver(FlashMemoryDevice hardware, Timer timer) {
-        this.hardware = hardware;
         this.hardwareReader = new HardwareReader(hardware);
         this.hardwareWriter = new HardwareWriter(hardware);
         this.writeVerifier = new WriteOperationVerifier(hardware, timer);
