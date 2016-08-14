@@ -18,10 +18,6 @@ public class InternalHardwareErrorHandler implements WriteErrorHandler {
         throw new InternalHardwareError();
     }
     private void setHardwareReadyToAcceptNewWrites() {
-        write(0x0, (byte) 0xFF);
-    }
-
-    private void write(long address, byte data) {
-        hardware.write(address, data);
+        hardware.write((long) 0x0, (byte) 0xFF);
     }
 }

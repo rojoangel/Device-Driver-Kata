@@ -20,12 +20,6 @@ public class VoltageErrorHandler implements WriteErrorHandler {
     }
 
     private void setHardwareReadyToAcceptNewWrites() {
-        write(0x0, (byte) 0xFF);
+        hardware.write((long) 0x0, (byte) 0xFF);
     }
-
-    private void write(long address, byte data) {
-        hardware.write(address, data);
-    }
-
-
 }
