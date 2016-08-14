@@ -1,4 +1,6 @@
-package codekata;
+package codekata.reader;
+
+import codekata.FlashMemoryDevice;
 
 public class HardwareReader {
     private final FlashMemoryDevice hardware;

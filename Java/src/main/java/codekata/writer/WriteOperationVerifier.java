@@ -1,9 +1,12 @@
-package codekata;
+package codekata.writer;
 
+import codekata.Timer;
 import codekata.exception.WriteError;
 import codekata.exception.write.*;
+import codekata.reader.HardwareReader;
+import codekata.writer.HardwareWriter;
 
-class WriteOperationVerifier {
+public class WriteOperationVerifier {
 
     private HardwareReader hardwareReader;
     private HardwareWriter hardwareWriter;

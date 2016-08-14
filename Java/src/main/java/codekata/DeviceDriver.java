@@ -1,6 +1,9 @@
 package codekata;
 
 import codekata.exception.WriteError;
+import codekata.reader.HardwareReader;
+import codekata.writer.HardwareWriter;
+import codekata.writer.WriteOperationVerifier;
 
 /**
  * This class is used by the operating system to interact with the hardware 'FlashMemoryDevice'.
