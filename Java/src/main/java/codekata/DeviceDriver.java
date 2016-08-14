@@ -10,8 +10,6 @@ import codekata.writer.WriteOperationVerifier;
  */
 public class DeviceDriver {
 
-    public static final byte PROGRAM_COMMAND = (byte) 0x40;
-
     private HardwareReader hardwareReader;
     private HardwareWriter hardwareWriter;
 
@@ -25,17 +23,7 @@ public class DeviceDriver {
         return hardwareReader.read(address);
     }
 
-    public void write(long address, byte data) throws Exception {
-        writeProgramCommand();
-        writeToHardware(address, data);
-    }
-
-    private void writeToHardware(long address, byte data) throws WriteError {
+    public void write(long address, byte data) throws WriteError {
         hardwareWriter.write(address, data);
     }
-
-    private void writeProgramCommand() {
-        hardwareWriter.writeToHardware(0x0, PROGRAM_COMMAND);
-    }
-
 }
