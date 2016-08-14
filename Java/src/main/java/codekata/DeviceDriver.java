@@ -12,6 +12,7 @@ public class DeviceDriver {
 
     private FlashMemoryDevice hardware;
     private Timer timer;
+    private WriteOperationVerifier writeVerifier;
 
     private FlashMemoryDevice getHardware() {
         return hardware;
@@ -20,6 +21,7 @@ public class DeviceDriver {
     public DeviceDriver(FlashMemoryDevice hardware, Timer timer) {
         this.hardware = hardware;
         this.timer = timer;
+        this.writeVerifier = new WriteOperationVerifier();
     }
 
     public byte read(long address) {
@@ -33,7 +35,7 @@ public class DeviceDriver {
     }
 
     private void verifyWrite(long address, byte data) throws WriteError {
-        new WriteOperationVerifier().verify(address, data);
+        this.writeVerifier.verify(address, data);
     }
 
     private byte readFromHardware(long address) {
