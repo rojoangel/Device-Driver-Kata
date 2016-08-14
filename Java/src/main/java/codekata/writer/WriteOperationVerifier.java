@@ -5,32 +5,42 @@ import codekata.Timer;
 import codekata.exception.WriteError;
 import codekata.exception.write.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class WriteOperationVerifier {
 
+    private final Map<Byte, WriteErrorHandler> errorHandlers = new HashMap<>();
     private FlashMemoryDevice hardware;
     private Timer timer;
 
     public WriteOperationVerifier(FlashMemoryDevice hardware, Timer timer) {
         this.hardware = hardware;
+        this.errorHandlers.put((byte) 0b0001000100, new VoltageErrorHandler(this.hardware));
         this.timer = timer;
     }
 
     public void verify(long address, byte data) throws WriteError {
         byte readByte = waitForWriteOperationToComplete();
+        handleWriteResult(readByte);
         switch (readByte) {
             case 0b0001000000:
                 if (!verifyWrittenData(address, data)) {
                     throw new WriteVerificationError();
                 }
                 break;
-            case 0b0001000100:
-                new VoltageErrorHandler(hardware).handle();
             case 0b0001001000:
                 setHardwareReadyToAcceptNewWrites();
                 throw new InternalHardwareError();
             case 0b0001010000:
                 setHardwareReadyToAcceptNewWrites();
                 throw new ProtectedBlockError();
+        }
+    }
+
+    private void handleWriteResult(byte readByte) throws WriteError {
+        if (errorHandlers.containsKey(readByte)) {
+            errorHandlers.get(readByte).handle();
         }
     }
 
