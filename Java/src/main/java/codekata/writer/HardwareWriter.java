@@ -16,8 +16,12 @@ public class HardwareWriter {
     }
 
     public void write(long address, byte data) throws WriteError {
-        this.writeProgramCommand();
-        hardware.write(address, data);
+        writeProgramCommand();
+        writeToHardware(address, data);
+        verifyWrite(address, data);
+    }
+
+    private void verifyWrite(long address, byte data) throws WriteError {
         verifier.verify(address, data);
     }
 
@@ -28,5 +32,4 @@ public class HardwareWriter {
     private void writeProgramCommand() {
         this.writeToHardware(0x0, PROGRAM_COMMAND);
     }
-
 }
