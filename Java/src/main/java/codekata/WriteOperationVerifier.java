@@ -5,13 +5,11 @@ import codekata.exception.write.*;
 
 class WriteOperationVerifier {
 
-    private FlashMemoryDevice hardware;
     private HardwareReader hardwareReader;
     private HardwareWriter hardwareWriter;
     private Timer timer;
 
     WriteOperationVerifier(FlashMemoryDevice hardware, Timer timer) {
-        this.hardware = hardware;
         this.hardwareReader = new HardwareReader(hardware);
         this.hardwareWriter = new HardwareWriter(hardware);
         this.timer = timer;
@@ -73,11 +71,8 @@ class WriteOperationVerifier {
     private byte readFromHardware(long address) {
         return hardwareReader.read(address);
     }
+
     private void writeToHardware(long address, byte data) {
         hardwareWriter.write(address, data);
     }
-    private FlashMemoryDevice getHardware() {
-        return hardware;
-    }
-
 }
