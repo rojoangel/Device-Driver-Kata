@@ -24,7 +24,7 @@ public class WriteOperationVerifier {
 
     public void verify(long address, byte data) throws WriteError {
         byte readByte = waitForWriteOperationToComplete();
-        handleWriteResult(readByte);
+        handleWriteError(readByte);
         switch (readByte) {
             case 0b0001000000:
                 if (!verifyWrittenData(address, data)) {
@@ -34,7 +34,7 @@ public class WriteOperationVerifier {
         }
     }
 
-    private void handleWriteResult(byte readByte) throws WriteError {
+    private void handleWriteError(byte readByte) throws WriteError {
         if (errorHandlers.containsKey(readByte)) {
             errorHandlers.get(readByte).handle();
         }
