@@ -1,6 +1,7 @@
 package codekata.writer;
 
 import codekata.FlashMemoryDevice;
+import codekata.Timer;
 import codekata.exception.WriteError;
 
 public class HardwareWriter {
@@ -10,9 +11,9 @@ public class HardwareWriter {
     private final FlashMemoryDevice hardware;
     private WriteOperationVerifier verifier;
 
-    public HardwareWriter(FlashMemoryDevice hardware, WriteOperationVerifier verifier) {
+    public HardwareWriter(FlashMemoryDevice hardware, Timer timer) {
         this.hardware = hardware;
-        this.verifier = verifier;
+        this.verifier = new WriteOperationVerifier(hardware, timer);
     }
 
     public void write(long address, byte data) throws WriteError {
