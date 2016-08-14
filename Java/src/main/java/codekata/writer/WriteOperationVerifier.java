@@ -24,13 +24,20 @@ public class WriteOperationVerifier {
 
     public void verify(long address, byte data) throws WriteError {
         byte readByte = waitForWriteOperationToComplete();
+        if (isSuccessfulWrite(readByte)) {
+            handleWriteSuccess(address, data);
+            return;
+        }
         handleWriteError(readByte);
-        switch (readByte) {
-            case 0b0001000000:
-                if (!verifyWrittenData(address, data)) {
-                    throw new WriteVerificationError();
-                }
-                break;
+    }
+
+    private boolean isSuccessfulWrite(byte readByte) {
+        return readByte == 0b0001000000;
+    }
+
+    private void handleWriteSuccess(long address, byte data) throws WriteVerificationError {
+        if (!verifyWrittenData(address, data)) {
+            throw new WriteVerificationError();
         }
     }
 
