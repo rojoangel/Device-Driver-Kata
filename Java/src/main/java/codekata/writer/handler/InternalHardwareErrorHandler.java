@@ -1,8 +1,9 @@
-package codekata.writer;
+package codekata.writer.handler;
 
 import codekata.FlashMemoryDevice;
 import codekata.exception.WriteError;
 import codekata.exception.write.InternalHardwareError;
+import codekata.writer.WriteErrorHandler;
 
 public class InternalHardwareErrorHandler implements WriteErrorHandler {
 

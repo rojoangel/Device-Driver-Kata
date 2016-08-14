@@ -4,6 +4,9 @@ import codekata.FlashMemoryDevice;
 import codekata.Timer;
 import codekata.exception.WriteError;
 import codekata.exception.write.*;
+import codekata.writer.handler.InternalHardwareErrorHandler;
+import codekata.writer.handler.ProtectedBlockErrorHandler;
+import codekata.writer.handler.VoltageErrorHandler;
 
 import java.util.HashMap;
 import java.util.Map;

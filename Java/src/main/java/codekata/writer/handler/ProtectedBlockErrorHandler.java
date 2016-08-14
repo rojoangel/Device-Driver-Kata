@@ -1,23 +1,21 @@
-package codekata.writer;
+package codekata.writer.handler;
 
 import codekata.FlashMemoryDevice;
 import codekata.exception.WriteError;
-import codekata.exception.write.VoltageError;
+import codekata.exception.write.ProtectedBlockError;
+import codekata.writer.WriteErrorHandler;
 
-public class VoltageErrorHandler implements WriteErrorHandler {
-
+public class ProtectedBlockErrorHandler implements WriteErrorHandler {
     private FlashMemoryDevice hardware;
 
-    public VoltageErrorHandler(FlashMemoryDevice hardware) {
+    public ProtectedBlockErrorHandler(FlashMemoryDevice hardware) {
         this.hardware = hardware;
     }
 
-    @Override
     public void handle() throws WriteError {
         setHardwareReadyToAcceptNewWrites();
-        throw new VoltageError();
+        throw new ProtectedBlockError();
     }
-
     private void setHardwareReadyToAcceptNewWrites() {
         write(0x0, (byte) 0xFF);
     }
@@ -25,6 +23,5 @@ public class VoltageErrorHandler implements WriteErrorHandler {
     private void write(long address, byte data) {
         hardware.write(address, data);
     }
-
 
 }
