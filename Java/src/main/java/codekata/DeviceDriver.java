@@ -14,12 +14,11 @@ public class DeviceDriver {
 
     private HardwareReader hardwareReader;
     private HardwareWriter hardwareWriter;
-    private WriteOperationVerifier writeVerifier;
 
     public DeviceDriver(FlashMemoryDevice hardware, Timer timer) {
+        WriteOperationVerifier writeVerifier = new WriteOperationVerifier(hardware, timer);
         this.hardwareReader = new HardwareReader(hardware);
-        this.hardwareWriter = new HardwareWriter(hardware);
-        this.writeVerifier = new WriteOperationVerifier(hardware, timer);
+        this.hardwareWriter = new HardwareWriter(hardware, writeVerifier);
     }
 
     public byte read(long address) {
@@ -32,8 +31,7 @@ public class DeviceDriver {
     }
 
     private void writeToHardware(long address, byte data) throws WriteError {
-        hardwareWriter.writeToHardware(address, data);
-        writeVerifier.verify(address, data);
+        hardwareWriter.write(address, data);
     }
 
     private void writeProgramCommand() {
