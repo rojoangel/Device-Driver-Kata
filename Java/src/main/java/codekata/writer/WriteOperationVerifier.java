@@ -24,8 +24,7 @@ public class WriteOperationVerifier {
                 }
                 break;
             case 0b0001000100:
-                setHardwareReadyToAcceptNewWrites();
-                throw new VoltageError();
+                new VoltageErrorHandler(hardware).handle();
             case 0b0001001000:
                 setHardwareReadyToAcceptNewWrites();
                 throw new InternalHardwareError();
