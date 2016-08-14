@@ -29,15 +29,11 @@ public class DeviceDriver {
     public void write(long address, byte data) throws Exception {
         writeProgramCommand();
         writeToHardware(address, data);
-        verifyWrite(address, data);
     }
 
-    private void verifyWrite(long address, byte data) throws WriteError {
-        this.writeVerifier.verify(address, data);
-    }
-
-    private void writeToHardware(long address, byte data) {
+    private void writeToHardware(long address, byte data) throws WriteError {
         hardwareWriter.write(address, data);
+        writeVerifier.verify(address, data);
     }
 
     private void writeProgramCommand() {
