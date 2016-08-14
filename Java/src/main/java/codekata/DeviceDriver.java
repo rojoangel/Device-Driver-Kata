@@ -43,12 +43,7 @@ public class DeviceDriver {
     private void writeToHardware(long address, byte data) {
         getHardware().write(address, data);
     }
-
-
-    private boolean isReadyBitSet(byte readByte) {
-        return (readByte & 0b0001000000) == 0b0001000000;
-    }
-
+    
     private void writeProgramCommand() {
         writeToHardware(0x0, PROGRAM_COMMAND);
     }
@@ -90,6 +85,10 @@ public class DeviceDriver {
 
         private boolean wasWriteOperationSuccessful(byte readByte) {
             return readByte == 0b0001000000;
+        }
+
+        private boolean isReadyBitSet(byte readByte) {
+            return (readByte & 0b0001000000) == 0b0001000000;
         }
 
         private boolean verifyWriteOperation(long address, byte data) {
