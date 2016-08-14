@@ -19,10 +19,18 @@ public class WriteOperationVerifier {
 
     public WriteOperationVerifier(FlashMemoryDevice hardware, Timer timer) {
         this.hardware = hardware;
-        this.errorHandlers.put((byte) 0b0001000100, new VoltageErrorHandler(this.hardware));
-        this.errorHandlers.put((byte) 0b0001001000, new InternalHardwareErrorHandler(this.hardware));
-        this.errorHandlers.put((byte) 0b0001010000, new ProtectedBlockErrorHandler(this.hardware));
         this.timer = timer;
+        registerErrorHandlers();
+    }
+
+    private void registerErrorHandlers() {
+        registerErrorHandler(new VoltageErrorHandler(this.hardware));
+        registerErrorHandler(new InternalHardwareErrorHandler(this.hardware));
+        registerErrorHandler(new ProtectedBlockErrorHandler(this.hardware));
+    }
+
+    private void registerErrorHandler(WriteErrorHandler handler) {
+        this.errorHandlers.put(handler.handles(), handler);
     }
 
     public void verify(long address, byte data) throws WriteError {
