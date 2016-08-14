@@ -17,20 +17,21 @@ public class WriteOperationVerifier {
 
     public void verify(long address, byte data) throws WriteError {
         byte readByte = waitForWriteOperationToComplete();
-        if (wasWriteOperationSuccessful(readByte)) {
-            if (!verifyWrittenData(address, data)) {
-                throw new WriteVerificationError();
-            }
-        } else {
-            setHardwareReadyToAcceptNewWrites();
-            switch (readByte) {
-                case 0b0001000100:
-                    throw new VoltageError();
-                case 0b0001001000:
-                    throw new InternalHardwareError();
-                case 0b0001010000:
-                    throw new ProtectedBlockError();
-            }
+        switch (readByte) {
+            case 0b0001000000:
+                if (!verifyWrittenData(address, data)) {
+                    throw new WriteVerificationError();
+                }
+                break;
+            case 0b0001000100:
+                setHardwareReadyToAcceptNewWrites();
+                throw new VoltageError();
+            case 0b0001001000:
+                setHardwareReadyToAcceptNewWrites();
+                throw new InternalHardwareError();
+            case 0b0001010000:
+                setHardwareReadyToAcceptNewWrites();
+                throw new ProtectedBlockError();
         }
     }
 
@@ -44,10 +45,6 @@ public class WriteOperationVerifier {
                 throw new ReadyBitTimeoutError();
             }
         } while (true);
-    }
-
-    private boolean wasWriteOperationSuccessful(byte readByte) {
-        return readByte == 0b0001000000;
     }
 
     private boolean isReadyBitSet(byte readByte) {
