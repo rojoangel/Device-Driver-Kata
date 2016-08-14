@@ -1,6 +1,6 @@
 package codekata;
 
-import codekata.exception.*;
+import codekata.exception.write.*;
 
 /**
  * This class is used by the operating system to interact with the hardware 'FlashMemoryDevice'.

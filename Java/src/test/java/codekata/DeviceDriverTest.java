@@ -1,6 +1,6 @@
 package codekata;
 
-import codekata.exception.*;
+import codekata.exception.write.*;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.junit.Before;
