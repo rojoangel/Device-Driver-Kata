@@ -1,4 +1,4 @@
 package codekata.exception;
 
-public class WriteError extends Exception {
+public class WriteError extends RuntimeException {
 }

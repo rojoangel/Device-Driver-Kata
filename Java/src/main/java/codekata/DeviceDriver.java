@@ -1,6 +1,5 @@
 package codekata;
 
-import codekata.exception.WriteError;
 import codekata.reader.HardwareReader;
 import codekata.writer.HardwareWriter;
 
@@ -21,7 +20,7 @@ public class DeviceDriver {
         return hardwareReader.read(address);
     }
 
-    public void write(long address, byte data) throws WriteError {
+    public void write(long address, byte data) {
         hardwareWriter.write(address, data);
     }
 }
