@@ -4,7 +4,6 @@ import codekata.Timer;
 import codekata.exception.WriteError;
 import codekata.exception.write.*;
 import codekata.reader.HardwareReader;
-import codekata.writer.HardwareWriter;
 
 public class WriteOperationVerifier {
 
@@ -76,6 +75,6 @@ public class WriteOperationVerifier {
     }
 
     private void writeToHardware(long address, byte data) {
-        hardwareWriter.write(address, data);
+        hardwareWriter.writeToHardware(address, data);
     }
 }

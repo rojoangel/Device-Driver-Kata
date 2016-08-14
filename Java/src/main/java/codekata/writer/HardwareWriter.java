@@ -9,7 +9,7 @@ public class HardwareWriter {
         this.hardware = hardware;
     }
 
-    public void write(long address, byte data) {
+    public void writeToHardware(long address, byte data) {
         hardware.write(address, data);
     }
 }

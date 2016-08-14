@@ -52,11 +52,11 @@ public class DeviceDriverTest {
             ignoring(timer);
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
-//        Then make a call to write the data to the address you want to write to.
+//        Then make a call to writeToHardware the data to the address you want to writeToHardware to.
             oneOf(hardware).write(address, value);
 //        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
-//          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
-//          In a typical device it should take around ten microseconds, but it will vary from write to write.
+//          Repeat the read operation until the ready bit is set to 1. This means the writeToHardware operation is complete.
+//          In a typical device it should take around ten microseconds, but it will vary from writeToHardware to writeToHardware.
             exactly(4).of(hardware).read(0x0);
             will(onConsecutiveCalls(
                     returnValue((byte) 0b0000000000),
@@ -66,7 +66,7 @@ public class DeviceDriverTest {
 //          If all of them are set to 0 then the operation was successful.
 //        You should then make a read from the memory address you previously set,
 //          in order to check it returns the value you set.
-//        If that is successful, then you can assume the whole write operation was successful.
+//        If that is successful, then you can assume the whole writeToHardware operation was successful.
             oneOf(hardware).read(address);
             will(returnValue(value));
         }});
@@ -91,11 +91,11 @@ public class DeviceDriverTest {
             ignoring(timer);
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
-//        Then make a call to write the data to the address you want to write to.
+//        Then make a call to writeToHardware the data to the address you want to writeToHardware to.
             oneOf(hardware).write(address, value);
 //        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
-//          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
-//          In a typical device it should take around ten microseconds, but it will vary from write to write.
+//          Repeat the read operation until the ready bit is set to 1. This means the writeToHardware operation is complete.
+//          In a typical device it should take around ten microseconds, but it will vary from writeToHardware to writeToHardware.
             exactly(4).of(hardware).read(0x0);
             will(onConsecutiveCalls(
                     returnValue((byte) 0b0000000000),
@@ -105,7 +105,7 @@ public class DeviceDriverTest {
 //          If all of them are set to 0 then the operation was successful.
 //        You should then make a read from the memory address you previously set,
 //          in order to check it returns the value you set.
-//        If that is successful, then you can assume the whole write operation was successful.
+//        If that is successful, then you can assume the whole writeToHardware operation was successful.
             oneOf(hardware).read(address);
             will(returnValue(readVerificationFailureValue));
         }});
@@ -129,11 +129,11 @@ public class DeviceDriverTest {
             ignoring(timer);
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
-//        Then make a call to write the data to the address you want to write to.
+//        Then make a call to writeToHardware the data to the address you want to writeToHardware to.
             oneOf(hardware).write(address, value);
 //        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
-//          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
-//          In a typical device it should take around ten microseconds, but it will vary from write to write.
+//          Repeat the read operation until the ready bit is set to 1. This means the writeToHardware operation is complete.
+//          In a typical device it should take around ten microseconds, but it will vary from writeToHardware to writeToHardware.
             exactly(4).of(hardware).read(0x0);
             will(onConsecutiveCalls(
                     returnValue((byte) 0b0000000000),
@@ -142,8 +142,8 @@ public class DeviceDriverTest {
 //        In the case of an error, the device sets the one of the other bits in the data at location 0x0
 //          bit 3: Vpp error. The voltage on the device was wrong and it is now physically damaged.
                     returnValue((byte) 0b0001000100)));
-//        If any of these error bits are set, you must write 0xFF to address 0x0
-//          before the device will accept any new write requests.
+//        If any of these error bits are set, you must writeToHardware 0xFF to address 0x0
+//          before the device will accept any new writeToHardware requests.
 //          This will reset the error bits to zero. Note that until the 'ready bit' is set,
 //          then you will not get valid values for any of the error bits.
             oneOf(hardware).write(0x0, (byte) 0xFF);
@@ -168,11 +168,11 @@ public class DeviceDriverTest {
             ignoring(timer);
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
-//        Then make a call to write the data to the address you want to write to.
+//        Then make a call to writeToHardware the data to the address you want to writeToHardware to.
             oneOf(hardware).write(address, value);
 //        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
-//          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
-//          In a typical device it should take around ten microseconds, but it will vary from write to write.
+//          Repeat the read operation until the ready bit is set to 1. This means the writeToHardware operation is complete.
+//          In a typical device it should take around ten microseconds, but it will vary from writeToHardware to writeToHardware.
             exactly(4).of(hardware).read(0x0);
             will(onConsecutiveCalls(
                     returnValue((byte) 0b0000000000),
@@ -181,8 +181,8 @@ public class DeviceDriverTest {
 //        In the case of an error, the device sets the one of the other bits in the data at location 0x0
 //          bit 4: internal error. Something went wrong this time but next time it might work.
                     returnValue((byte) 0b0001001000)));
-//        If any of these error bits are set, you must write 0xFF to address 0x0
-//          before the device will accept any new write requests.
+//        If any of these error bits are set, you must writeToHardware 0xFF to address 0x0
+//          before the device will accept any new writeToHardware requests.
 //          This will reset the error bits to zero. Note that until the 'ready bit' is set,
 //          then you will not get valid values for any of the error bits.
             oneOf(hardware).write(0x0, (byte) 0xFF);
@@ -206,11 +206,11 @@ public class DeviceDriverTest {
             ignoring(timer);
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
-//        Then make a call to write the data to the address you want to write to.
+//        Then make a call to writeToHardware the data to the address you want to writeToHardware to.
             oneOf(hardware).write(address, value);
 //        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
-//          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
-//          In a typical device it should take around ten microseconds, but it will vary from write to write.
+//          Repeat the read operation until the ready bit is set to 1. This means the writeToHardware operation is complete.
+//          In a typical device it should take around ten microseconds, but it will vary from writeToHardware to writeToHardware.
             exactly(4).of(hardware).read(0x0);
             will(onConsecutiveCalls(
                     returnValue((byte) 0b0000000000),
@@ -219,8 +219,8 @@ public class DeviceDriverTest {
 //        In the case of an error, the device sets the one of the other bits in the data at location 0x0
 //          bit 4: internal error. Something went wrong this time but next time it might work.
                     returnValue((byte) 0b0001010000)));
-//        If any of these error bits are set, you must write 0xFF to address 0x0
-//          before the device will accept any new write requests.
+//        If any of these error bits are set, you must writeToHardware 0xFF to address 0x0
+//          before the device will accept any new writeToHardware requests.
 //          This will reset the error bits to zero. Note that until the 'ready bit' is set,
 //          then you will not get valid values for any of the error bits.
             oneOf(hardware).write(0x0, (byte) 0xFF);
@@ -242,11 +242,11 @@ public class DeviceDriverTest {
         context.checking(new Expectations() {{
 //          Begin by writing the 'Program' command, 0x40 to address 0x0
             oneOf(hardware).write(0x0, (byte) 0x40);
-//        Then make a call to write the data to the address you want to write to.
+//        Then make a call to writeToHardware the data to the address you want to writeToHardware to.
             oneOf(hardware).write(address, value);
 //        Then read the value in address 0x0 and check bit 7 in the returned data, also known as the 'ready bit'.
-//          Repeat the read operation until the ready bit is set to 1. This means the write operation is complete.
-//          In a typical device it should take around ten microseconds, but it will vary from write to write.
+//          Repeat the read operation until the ready bit is set to 1. This means the writeToHardware operation is complete.
+//          In a typical device it should take around ten microseconds, but it will vary from writeToHardware to writeToHardware.
             oneOf(hardware).read(0x0);
             will(returnValue((byte) 0b0000000000));
 

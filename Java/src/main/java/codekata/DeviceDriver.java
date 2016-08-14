@@ -32,12 +32,12 @@ public class DeviceDriver {
     }
 
     private void writeToHardware(long address, byte data) throws WriteError {
-        hardwareWriter.write(address, data);
+        hardwareWriter.writeToHardware(address, data);
         writeVerifier.verify(address, data);
     }
 
     private void writeProgramCommand() {
-        hardwareWriter.write(0x0, PROGRAM_COMMAND);
+        hardwareWriter.writeToHardware(0x0, PROGRAM_COMMAND);
     }
 
 }
