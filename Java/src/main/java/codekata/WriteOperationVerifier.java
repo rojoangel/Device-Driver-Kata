@@ -9,7 +9,7 @@ class WriteOperationVerifier {
     private HardwareWriter hardwareWriter;
     private Timer timer;
 
-    WriteOperationVerifier(HardwareReader hardwareReader, HardwareWriter hardwareWriter, Timer timer) {
+    public WriteOperationVerifier(HardwareReader hardwareReader, HardwareWriter hardwareWriter, Timer timer) {
         this.hardwareReader = hardwareReader;
         this.hardwareWriter = hardwareWriter;
         this.timer = timer;
