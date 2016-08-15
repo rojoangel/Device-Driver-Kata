@@ -18,7 +18,7 @@ public class VoltageErrorHandlerTest {
     }
 
     @Test(expected = VoltageError.class)
-    public void handle() throws Exception {
+    public void testHandle() throws Exception {
         FlashMemoryDevice hardware = context.mock(FlashMemoryDevice.class);
         context.checking(new Expectations() {{
             oneOf(hardware).write((long) 0x0, (byte) 0xFF);
