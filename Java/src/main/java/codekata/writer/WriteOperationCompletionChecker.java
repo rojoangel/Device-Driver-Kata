@@ -15,12 +15,13 @@ public class WriteOperationCompletionChecker {
     }
 
     public byte check() throws ReadyBitTimeoutError {
+        timer.start();
         do {
             byte readByte = read(0x0);
             if (isReadyBitSet(readByte)) {
                 return readByte;
             }
-            if (timeout()) {
+            if (timer.hasTimedOut()) {
                 throw new ReadyBitTimeoutError();
             }
         } while (true);
@@ -28,10 +29,6 @@ public class WriteOperationCompletionChecker {
 
     private boolean isReadyBitSet(byte readByte) {
         return (readByte & 0b0001000000) == 0b0001000000;
-    }
-
-    private boolean timeout() {
-        return timer.hasTimedOut();
     }
 
     private byte read(long address) {
